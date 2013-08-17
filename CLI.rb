@@ -1,21 +1,26 @@
 require "./Turn.rb"
 require "./Scorecard.rb"
 
+def format(score)
+  return "  " if score == -1
+  return "%2d" %[score]
+end
+
 def display(s, dice, m1, m2, m3, turn_num, roll_num)
   score = s.get_all
 
   puts
-  puts   " ______________________________________ "
-  printf "|a Aces    [%2d] |g 3 of a kind    [%2d] | Dice:                                Turn %2d/13\n", score["aces"], score["3_of_a_kind"], turn_num
-  printf "|b Twos    [%2d] |h 4 of a kind    [%2d] |   a %d                                Roll  %1d/3\n", score["twos"], score["4_of_a_kind"], dice[0], roll_num
-  printf "|c Threes  [%2d] |i Full house     [%2d] |   b %d\n", score["threes"], score["full_house"], dice[1]
-  printf "|d Fours   [%2d] |j Small straight [%2d] |   c %d\n", score["fours"], score["small_straight"], dice[2]
-  printf "|e Fives   [%2d] |k Large straight [%2d] |   d %d\n", score["fives"], score["large_straight"], dice[3]
-  printf "|f Sixes   [%2d] |l Yahtzee        [%2d] |   e %d\n", score["sixes"], score["yahtzee"], dice[4]
+  puts   " ______________________________________ " 
+  printf "|a Aces    [%s] |g 3 of a kind    [%s] | Dice:                                Turn %2d/13\n", format(score["aces"]), format(score["3_of_a_kind"]), turn_num
+  printf "|b Twos    [%s] |h 4 of a kind    [%s] |   a %d                                Roll  %1d/3\n", format(score["twos"]), format(score["4_of_a_kind"]), dice[0], roll_num
+  printf "|c Threes  [%s] |i Full house     [%s] |   b %d\n", format(score["threes"]), format(score["full_house"]), dice[1]
+  printf "|d Fours   [%s] |j Small straight [%s] |   c %d\n", format(score["fours"]), format(score["small_straight"]), dice[2]
+  printf "|e Fives   [%s] |k Large straight [%s] |   d %d\n", format(score["fives"]), format(score["large_straight"]), dice[3]
+  printf "|f Sixes   [%s] |l Yahtzee        [%s] |   e %d\n", format(score["sixes"]), format(score["yahtzee"]), dice[4]
   printf "|               |  Yahtzee bonus   %3d |\n", score["yahtzee_bonus"]
-  printf "|Subtotal:   %2d |m Chance         [%2d] | %s\n", score["upper_subtotal"], score["chance"], m1
+  printf "|Subtotal:   %2d |m Chance         [%s] | %s\n", score["upper_subtotal"], format(score["chance"]), m1
   printf "|Bonus:      %2d |                      | %s\n", score["upper_bonus"], m2
-  printf "|Total:      %2d |Total:             %2d | %s\n", score["upper_total"], score["lower_total"], m3
+  printf "|Total:     %3d |Total:            %3d | %s\n", score["upper_total"], score["lower_total"], m3
   printf "|______ Grand Total:%4d ______________|   > ", score["grand_total"]
   input = STDIN.gets.chomp
   return input
@@ -96,3 +101,4 @@ t = [1...13]
     success = score sc, selection.split("")[0], t[i].get_dice
   end
 end
+display sc, [0,0,0,0,0], "", "Game complete", "", 13, 3
