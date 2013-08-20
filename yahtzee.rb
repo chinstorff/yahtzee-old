@@ -1,4 +1,56 @@
 
+class Turn
+  def initialize
+    @dice     = [0,0,0,0,0]
+    @preserve = [0,0,0,0,0]
+    
+    @reroll_count = 0
+    @reroll_max   = 2
+  end
+
+  def roll_dice(num_dice)
+    a = []
+    
+    num_dice.times do
+      a.push Random.rand(6) + 1
+    end
+    
+    return a
+  end
+
+  def set_preserve(pr)
+    @preserve = pr
+  end
+  
+  def get_preserve
+    return @preserve
+  end
+
+  def get_dice
+    return @dice
+  end
+
+  def get_reroll_count
+    return @reroll_count
+  end
+
+  def roll
+    @dice = roll_dice 5
+  end
+
+  def reroll
+    if @reroll_count < @reroll_max
+      a = roll_dice 5
+      5.times do |i|
+        if @preserve[i] == 0
+          @dice[i] = a[i]
+        end
+      end
+    end
+    @reroll_count += 1
+  end
+end
+
 class Scorecard
   @@bonus_value          = 35
   @@full_house_value     = 25
@@ -11,6 +63,9 @@ class Scorecard
     @categories = [ "aces", "twos", "threes", "fours", "fives", "sixes",
                     "3_of_a_kind", "4_of_a_kind", "full_house", "small_straight",
                     "large_straight", "yahtzee", "yahtzee_bonus" "chance" ]
+
+    @turns = Array.new
+    13.times do { array.push Turn.new }
 
     @upper_section = { 
       "aces"   => -1, 
@@ -161,6 +216,5 @@ class Scorecard
       "grand_total"    => @grand_total
     }
     all.merge @upper_section.merge @lower_section
-    
   end
 end
