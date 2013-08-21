@@ -1,8 +1,8 @@
 
 class Turn
   def initialize
-    @dice     = [0,0,0,0,0]
-    @preserve = [0,0,0,0,0]
+    @dice     = roll_dice 5
+    @preserve = [1,1,1,1,1]
     
     @reroll_count = 0
     @reroll_max   = 2
@@ -34,10 +34,6 @@ class Turn
     return @reroll_count
   end
 
-  def roll
-    @dice = roll_dice 5
-  end
-
   def reroll
     if @reroll_count < @reroll_max
       a = roll_dice 5
@@ -65,8 +61,8 @@ class Scorecard
                     "large_straight", "yahtzee", "yahtzee_bonus" "chance" ]
 
     @turns = Array.new
-    13.times do { array.push Turn.new }
-
+    13.times { @turns.push Turn.new }
+    
     @upper_section = { 
       "aces"   => -1, 
       "twos"   => -1,
@@ -93,6 +89,10 @@ class Scorecard
     @lower_section_total    = 0
 
     @grand_total = 0
+  end
+
+  def get_turn(num)
+    return @turns[num]
   end
   
   def calculate_dice(dice)
