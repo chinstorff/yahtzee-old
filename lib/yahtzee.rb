@@ -1,10 +1,9 @@
-require 'grape'
+#require 'grape'
 
 module Yahtzee
-  class API < Grape::API
-    version 'v1.1', using: :header, vendor: :yahtzee
-    
-  end
+ # class API < Grape::API
+ #   version 'v1.1', using: :header, vendor: :yahtzee
+ # end
   
   class Controller
     def initialize
@@ -252,7 +251,7 @@ module Yahtzee
         end
         which = @upper_section[dice[0]]
         if @categories[which] == -1 
-          return score which
+          return score which dice joker
         end
         return 0
       else
