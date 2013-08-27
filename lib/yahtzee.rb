@@ -8,30 +8,51 @@ module Yahtzee
   
   class Controller
     def initialize
+      @message = ""
+      
       @sc = Scorecard.new
       
-      @turns = Array.new
-      13.times { @turns.push Turn.new }
-      @current_turn = 0
-
-      map = {
-        :reroll => ->(a) {
-
-        },
-        :score => ->(a) {
-
-        },
-        :get_data => ->() {
-
-        }
-      }
-      
-      def run f, a
-        map[f].call a
+      @turn = Turn.new
+    end
+    
+    def roll
+      @turn = Turn.new
+    end
+    
+    def reroll a
+      @turn.reroll a
+    end
+    
+    def score a 
+      case @sc.score a, @turn.get_dice, @turn.joker?
+      when -1
+        return false
+      when 0
+        @turn.set_joker true
+        return false
+      else
+        next_turn
+        return true
       end
     end
+    
+    def next_turn
+      @turn = Turn.new
+    end
+
+    def get_dice
+      return @turn.get_dice
+    end
+    
+    def get_data
+      return @sc.get_cats
+    end
+      
+    def get_potential
+      return sc.calculate_dice @turn.get_dice
+    end    
   end
- 
+
   class Turn
     def initialize
       @dice     = roll_dice 5
@@ -40,9 +61,10 @@ module Yahtzee
       @reroll_max   = 2
       
       @joker = false
+      @done  = false
     end
 
-    def roll_dice(num_dice)
+    def roll_dice num_dice
       a = []
       
       num_dice.times do
@@ -56,7 +78,7 @@ module Yahtzee
       return true if @reroll_count < @reroll_max
     end
     
-    def set_preserve(pr)
+    def set_preserve pr
       @preserve = pr
     end
     
@@ -80,6 +102,14 @@ module Yahtzee
       @joker = value
     end
 
+    def done?
+      return @done
+    end
+
+    def finish
+      @done = true
+    end
+    
     def reroll preserve # [1,1,1,1,1] preserves all
       if @reroll_count < @reroll_max
         a = roll_dice 5
@@ -103,8 +133,8 @@ module Yahtzee
 
     def initialize
       @upper_section = [ :aces, :twos, :threes, :fours, :fives, :sixes ]
-      @lower_section = [ :3_of_a_kind, :4_of_a_kind, :full_house, :small_straight,
-                         :large_straight, :yahtzee, :yahtzee_bonus :chance ]
+      @lower_section = [ :three_of_a_kind, :four_of_a_kind, :full_house, :small_straight,
+                         :large_straight, :yahtzee, :chance ]
       
       @categories = { 
         :aces   => -1, 
@@ -115,24 +145,24 @@ module Yahtzee
         :sixes  => -1,
         :upper_section_bonus => 0,
 
-        :3_of_a_kind    => -1,
-        :4_of_a_kind    => -1,
-        :full_house     => -1,
-        :small_straight => -1,
-        :large_straight => -1,
-        :yahtzee        => -1,
-        :chance         => -1,
-        :yahtzee_bonus  => 0,
+        :three_of_a_kind => -1,
+        :four_of_a_kind  => -1,
+        :full_house      => -1,
+        :small_straight  => -1,
+        :large_straight  => -1,
+        :yahtzee         => -1,
+        :chance          => -1,
+        :yahtzee_bonus   => 0,
         
-        :upper_section_subtotal = 0
-        :upper_section_total    = 0
-        :lower_section_total    = 0
+        :upper_section_subtotal => 0,
+        :upper_section_total    => 0,
+        :lower_section_total    => 0,
         
-        :grand_total = 0
+        :grand_total => 0
       }
     end
 
-    def calculate_dice(dice, joker)
+    def calculate_dice dice, joker
       cats = {
         :aces   => 0,
         :twos   => 0,
@@ -140,13 +170,13 @@ module Yahtzee
         :fours  => 0,
         :fives  => 0,
         :sixes  => 0,
-        :3_of_a_kind    => 0,
-        :4_of_a_kind    => 0,
-        :full_house     => 0,
-        :small_straight => 0,
-        :large_straight => 0,
-        :yahtzee        => 0,
-        :chance         => 0
+        :three_of_a_kind => 0,
+        :four_of_a_kind  => 0,
+        :full_house      => 0,
+        :small_straight  => 0,
+        :large_straight  => 0,
+        :yahtzee         => 0,
+        :chance          => 0
       }
       
       # upper section
@@ -189,52 +219,53 @@ module Yahtzee
       small = true if sdice.length >= 4 and (ssum == 10 or ssum == 14 or ssum == 18) or large
       
       
-      cats[:3_of_a_kind]    = sum if (max >= 3 || joker)
-      cats[:4_of_a_kind]    = sum if (max >= 4 || joker)
-      cats[:full_house]     = @@full_house_value if (max == 3 and smax == 2 || joker)
-      cats[:small_straight] = @@small_straight_value if (small || joker)
-      cats[:large_straight] = @@large_straight_value if (large || joker)
-      cats[:yahtzee]        = @@yahtzee_value if (max >= 5 || joker)
-      cats[:chance]         = sum
+      cats[:three_of_a_kind] = sum if (max >= 3 || joker)
+      cats[:four_of_a_kind]  = sum if (max >= 4 || joker)
+      cats[:full_house]      = @@full_house_value if (max == 3 and smax == 2 || joker)
+      cats[:small_straight]  = @@small_straight_value if (small || joker)
+      cats[:large_straight]  = @@large_straight_value if (large || joker)
+      cats[:yahtzee]         = @@yahtzee_value if (max >= 5 || joker)
+      cats[:chance]          = sum
       
       return cats
     end
 
-    def score(cat, joker)
-      pot = calculate_dice @turns[@current_turn].get_dice, joker
+    def score cat, dice, joker
+      pot = calculate_dice dice, joker
       
       case cat
       when (:aces or :twos or :threes or :fours or :fives or :sixes)
-        if @upper_section[cat] == -1
-          @upper_section[cat] = pot[cat]
+        if @categories[cat] == -1
+          @categories[cat] = pot[cat]
           calculate_totals
-          return true
+          return 1
         end
       when :yahtzee
-        case @upper_section[cat]
+        return -1 if joker
+        case @categories[:yahtzee]
         when -1
-          @lower_section[cat] = pot[cat]
+          @categories[:yahtzee] = pot[:yahtzee]
           calculate_totals
-          return true
+          return 1
         when @@yahtzee_value
-          @lower_section[:yahtzee_bonus] += @@yahtzee_bonus_value
+          @categories[:yahtzee_bonus] += @@yahtzee_bonus_value
         end
-        which = @upper_section[@categories[get_turn.get_dice[0]]]
-        if which == -1 
+        which = @upper_section[dice[0]]
+        if @categories[which] == -1 
           return score which
         end
-
+        return 0
       else
-        if @lower_section[cat] == -1
-          @lower_section[cat] = pot[cat]
+        if @categories[cat] == -1
+          @categories[cat] = pot[cat]
           calculate_totals
-          return true
+          return 1
         end
       end
-      return false
+      return -1
     end
     
-    def add_section(sect)
+    def add_section sect
       sum = 0
 
       @categories.each do |key, value|
