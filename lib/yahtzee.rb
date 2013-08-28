@@ -268,7 +268,7 @@ module Yahtzee
       sum = 0
 
       @categories.each do |key, value|
-        if sect.include? key && value > -1
+        if (sect.include? key) && value > -1
           sum += value
         end
       end

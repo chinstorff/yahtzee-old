@@ -6,7 +6,6 @@ def format(score)
 end
 
 def display(score, dice, m1, m2, m3)
-  puts
   puts   " ______________________________________ " 
   printf "|a Aces    [%s] |g 3 of a kind    [%s] | Dice:\n", format(score[:aces]), format(score[:three_of_a_kind])
   printf "|b Twos    [%s] |h 4 of a kind    [%s] |   a %d\n", format(score[:twos]), format(score[:four_of_a_kind]), dice[0]
