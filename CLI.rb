@@ -94,4 +94,4 @@ game = Yahtzee::Controller.new
     success = game.score(parse(selection.split("")[0]))
   end
 end
-display sc, [0,0,0,0,0], "", "Game complete", ""
+display game.get_data, [0,0,0,0,0], "", "Game complete", ""
