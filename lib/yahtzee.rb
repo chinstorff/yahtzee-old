@@ -25,13 +25,13 @@ module Yahtzee
     def score a 
       case @sc.score a, @turn.get_dice, @turn.joker?
       when -1
-        return false
+        return -1
       when 0
         @turn.set_joker true
-        return false
+        return 0
       else
         next_turn
-        return true
+        return 1
       end
     end
     
@@ -41,6 +41,10 @@ module Yahtzee
 
     def get_dice
       return @turn.get_dice
+    end
+
+    def set_dice a
+      @turn.set_dice a
     end
     
     def get_data
@@ -81,6 +85,10 @@ module Yahtzee
       @preserve = pr
     end
     
+    def set_dice a
+      @dice = a
+    end
+
     def get_preserve
       return @preserve
     end
@@ -133,7 +141,7 @@ module Yahtzee
     def initialize
       @upper_section = [ :aces, :twos, :threes, :fours, :fives, :sixes ]
       @lower_section = [ :three_of_a_kind, :four_of_a_kind, :full_house, :small_straight,
-                         :large_straight, :yahtzee, :chance ]
+                         :large_straight, :yahtzee, :chance, :yahtzee_bonus ]
       
       @categories = { 
         :aces   => -1, 
@@ -249,9 +257,9 @@ module Yahtzee
         when @@yahtzee_value
           @categories[:yahtzee_bonus] += @@yahtzee_bonus_value
         end
-        which = @upper_section[dice[0]]
+        which = @upper_section[dice[0]-1]
         if @categories[which] == -1 
-          return score which dice joker
+          return score which, dice, joker
         end
         return 0
       else
