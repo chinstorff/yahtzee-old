@@ -228,7 +228,7 @@ module Yahtzee
       
       cats[:three_of_a_kind] = sum if (max >= 3 || joker)
       cats[:four_of_a_kind]  = sum if (max >= 4 || joker)
-      cats[:full_house]      = @@full_house_value if (max == 3 and smax == 2 || joker)
+      cats[:full_house]      = @@full_house_value if ((max == 3 and smax == 2) || joker)
       cats[:small_straight]  = @@small_straight_value if (small || joker)
       cats[:large_straight]  = @@large_straight_value if (large || joker)
       cats[:yahtzee]         = @@yahtzee_value if (max >= 5 || joker)
