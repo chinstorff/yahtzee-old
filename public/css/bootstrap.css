@@ -290,6 +290,7 @@ a:focus {
 .span4 {
   width: 300px;
 }
+
 .span3 {
   width: 220px;
 }
@@ -326,6 +327,7 @@ a:focus {
 .offset4 {
   margin-left: 340px;
 }
+
 .offset3 {
   margin-left: 260px;
 }

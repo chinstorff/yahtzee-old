@@ -2,27 +2,59 @@
 <html lang="en">
   <%= erb :header, :layout => false %>
   <body>
-    <div class="container form-board">
-      <table class="table">
-	<tr>
-	  <td>
-	    <table class="table table-hover table-condensed">
-	      <tr><td>aces</td><td>[ ]</td></tr>
-	      <tr><td>twos</td><td>[ ]</td></tr>
-	      <tr><td>threes</td><td>[ ]</td></tr>
-	      <tr><td>fours</td><td>[ ]</td></tr>
-	      <tr><td>fives</td><td>[ ]</td></tr>
-	      <tr><td>sixes</td><td>[ ]</td></tr>
-	    </table>
-	  </td>
-	  <td>
-	    <table class="table table-hover table-condensed">
-	     <tr><td><a href="tbd">aces</a></td><td>[  ]</td></tr>
-	     <tr><td><a href="tbd">twos</a></td><td>[  ]</td></tr>
-	    </table>
-	  </td>
-	</tr>
-      </table>
+    <div class="row">
+      <div class="span2 offset3-5">
+	<h1>Yahtzee</h1>
+      </div>
+      <div class="span3">
+	<br>
+	Total score: 300
+	<a href="http://chinstorff.com" style="float:right; color:#F02311;">chinstorff.com</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span1 offset3-5">
+	<div style="float:right">
+	  <p style="font-family:dice; font-size:48px; line-height:48px;">
+	    <a href="#1" style="color:#000000; text-decoration:none">1</a><br>
+	    <a href="#2" style="color:#000000; text-decoration:none">2</a><br>
+	    <a href="#3" style="color:#000000; text-decoration:none">3</a><br>
+	    <a href="#4" style="color:#000000; text-decoration:none">4</a><br>
+	    <a href="#5" style="color:#000000; text-decoration:none">5</a><br>
+	  </p>
+	    &nbsp;<button type="button" class="btn btn-default btn-mini" style="margin-top:0px">reroll</button>
+	</div>
+      </div>
+      <div class="span2">
+	<table class="table table-condensed">
+	  <tr><td>Aces</td><td>&mdash;</td></tr>
+	  <tr><td>Twos</td><td>&mdash;</td></tr>
+	  <tr><td>Threes</td><td>&mdash;</td></tr>
+	  <tr><td>Fours</td><td>&mdash;</td></tr>
+	  <tr><td>Fives</td><td>&mdash;</td></tr>
+	  <tr><td>Sixes</td><td>&mdash;</td></tr>
+	  <tr><td></td><td></td></tr>
+	  <tr><td>Upper sum</td><td>65</td></tr>
+	  <tr><td>Bonus</td><td>35</td></tr>
+	  <tr><td>Subtotal</td><td>100</td></tr>
+	  <tr><td></td><td></td></tr>
+	</table>
+      </div>
+      <div class="span2">
+	<table class="table table-condensed">
+	  <tr><td>Three of a kind</td><td>&mdash;</td></tr>
+	  <tr><td>Four of a kind</td><td>&mdash;</td></tr>
+	  <tr><td>Full house</td><td>&mdash;</td></tr>
+	  <tr><td>Small straight</td><td>&mdash;</td></tr>
+	  <tr><td>Large straight</td><td>&mdash;</td></tr>
+	  <tr><td>Yahtzee</td><td>&mdash;</td></tr>
+	  <tr><td>Chance</td><td>&mdash;</td></tr>
+	  <tr><td>Yahtzee bonus</td><td>&mdash;</td></tr>
+	  <tr><td></td><td></td></tr>
+	  <tr><td>Subtotal</td><td>200</td></tr>
+	  <tr><td></td><td></td></tr>
+	</table>
+      </div>
     </div>
   </body>
 </html>
