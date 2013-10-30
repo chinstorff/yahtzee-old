@@ -1,7 +1,5 @@
 yahtzee
 =======
 
-ruby yahtzee
-
 todo:
-  create web interface
+  connect frontend and backend
