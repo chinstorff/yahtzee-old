@@ -1,4 +1,7 @@
 source 'https://rubygems.org'
+ruby '2.0.0'
 
-# Specify your gem's dependencies in yahtzee.gemspec
-gemspec
+gem 'sinatra'
+gem 'rack'
+gem 'thin'
+gem 'yahtzee'
