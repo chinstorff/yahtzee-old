@@ -1,10 +1,4 @@
-#require 'grape'
-
 module Yahtzee
- # class API < Grape::API
- #   version 'v1.1', using: :header, vendor: :yahtzee
- # end
-  
   class Controller
     def initialize
       @message = ""
@@ -50,7 +44,7 @@ module Yahtzee
     def get_data
       return @sc.get_cats
     end
-      
+    
     def get_potential
       return sc.calculate_dice @turn.get_dice
     end    
@@ -138,12 +132,13 @@ module Yahtzee
     @@yahtzee_value        = 50
     @@yahtzee_bonus_value  = 100
 
-    def initialize
+    def initialize data=nil
+      
       @upper_section = [ :aces, :twos, :threes, :fours, :fives, :sixes ]
       @lower_section = [ :three_of_a_kind, :four_of_a_kind, :full_house, :small_straight,
                          :large_straight, :yahtzee, :chance, :yahtzee_bonus ]
       
-      @categories = { 
+      @categories = data || { 
         :aces   => -1, 
         :twos   => -1,
         :threes => -1,
@@ -167,6 +162,7 @@ module Yahtzee
         
         :grand_total => 0
       }
+
     end
 
     def calculate_dice dice, joker
